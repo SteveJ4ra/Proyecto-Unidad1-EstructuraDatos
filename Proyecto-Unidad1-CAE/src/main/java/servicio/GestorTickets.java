@@ -154,6 +154,7 @@ public class GestorTickets {
     // --- Getters y Métodos de Utilidad ---
 
     public Ticket getTicketEnAtencion() { return ticketEnAtencion; }
+    public void setTicketEnAtencion(Ticket ticket) { this.ticketEnAtencion = ticket; }
     public boolean hayTicketsFinalizados() { return !ticketsFinalizados.isEmpty(); }
     public int undoTicketCount() { return undoRedoTicket.getSize(); } // <-- NUEVO
     public int redoTicketCount() { return undoRedoTicket.getSize(); } // <-- NUEVO

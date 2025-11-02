@@ -4,27 +4,48 @@ import modelo.Accion;
 import modelo.Ticket;
 import servicio.GestorTickets;
 
-// Acción para recibir un ticket
+// Acción para Recibir Ticket (Undo/Redo GLOBAL)
 public class AccionRecibirTicket extends Accion {
 
     private GestorTickets gestor;
     private Ticket ticket;
+    private boolean esUrgente;
 
     public AccionRecibirTicket(GestorTickets gestor, Ticket ticket) {
-        super("RECIBIR_TICKET", "Ticket ID " + ticket.getId() + (ticket.esUrgente() ? " URGENTE" : " NORMAL"));
+        super("RECIBIR_TICKET", "Ticket ID " + ticket.getId());
         this.gestor = gestor;
         this.ticket = ticket;
+        this.esUrgente = ticket.esUrgente();
     }
 
     @Override
     public void ejecutar() {
-        // REHACER: Vuelve a encolar el ticket en la cola correcta.
-        // Interactúa con: GestorTickets -> QuequeCAE.enqueque()
+        // REHACER: Vuelve a encolar el ticket
+        if (esUrgente) {
+            gestor.getColaUrgente().enqueque(ticket);
+        } else {
+            gestor.getColaNormal().enqueque(ticket);
+        }
     }
 
     @Override
     public void deshacer() {
-        // DESHACER: Elimina el ticket (por ID) de la cola correcta.
-        // Interactúa con: GestorTickets -> QuequeCAE.eliminarPorId()
+        // DESHACER: Elimina el ticket (por ID) de la cola correcta
+        Ticket t;
+        if (esUrgente) {
+            t = gestor.getColaUrgente().eliminarPorId(ticket.getId());
+        } else {
+            t = gestor.getColaNormal().eliminarPorId(ticket.getId());
+        }
+
+        if (t == null) {
+            System.err.println("Error al deshacer 'Recibir Ticket': No se encontró el ticket " + ticket.getId());
+        }
+    }
+
+    @Override
+    public String getResumenDetallado() {
+        return String.format("RECIBIR TICKET: Nuevo ticket #%d (%s) agregado a la cola",
+                ticket.getId(), esUrgente ? "Urgente" : "Normal");
     }
 }
