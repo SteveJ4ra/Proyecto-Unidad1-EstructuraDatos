@@ -20,6 +20,8 @@ public class AccionFinalizarCaso extends Accion {
 
     @Override
     public void ejecutar() {
+
+        gestor.setTicket
         // REHACER: Vuelve a finalizar el caso.
         // Saca el ticket de 'ticketEnAtencion' y lo mueve
         // a 'ticketsFinalizados' o lo re-encola, según su estado.

@@ -9,55 +9,44 @@ public class UndoRedoManager {
     public void registrarAccion(Accion accion) {
         if (accion == null) return;
         pilaUndo.push(accion);
-        pilaRedo.limpiar();
+        pilaRedo.limpiar(); // Al registrar una nueva acción, el historial de "rehacer" se pierde
     }
 
-    // Deshace la última acción. Devuelve true si se pudo deshacer.
     public boolean deshacer() {
-        if (pilaUndo == null || pilaUndo.estaVacia()) {
+        if (pilaUndo.estaVacia()) {
             System.err.println("No hay acciones para deshacer.");
             return false;
         }
         Accion accion = pilaUndo.pop();
-        if (accion == null) {
-            System.err.println("No hay acciones para deshacer.");
-            return false;
-        }
+        if (accion == null) return false; // Seguridad
 
-        accion.deshacer();
+        accion.deshacer(); // Ejecuta la lógica de reversión
         pilaRedo.push(accion);
 
-        // Mensaje detallado de lo que se deshizo
         System.out.println("Se deshizo: " + accion.getResumenDetallado());
         return true;
     }
 
-
-    // Rehace la última acción deshecha. Devuelve true si se pudo rehacer.
     public boolean rehacer() {
-        if (pilaRedo == null || pilaRedo.estaVacia()) {
+        if (pilaRedo.estaVacia()) {
             System.err.println("No hay acciones para rehacer.");
             return false;
         }
 
         Accion accion = pilaRedo.pop();
-        if (accion == null) {
-            System.err.println("No hay acciones para rehacer.");
-            return false;
-        }
+        if (accion == null) return false;
 
-        accion.ejecutar();
+        accion.ejecutar(); // Vuelve a ejecutar la lógica original
         pilaUndo.push(accion);
 
-        // Mensaje detallado de lo que se rehizo
         System.out.println("Se rehizo: " + accion.getResumenDetallado());
         return true;
     }
 
-    public int undoCount() { return pilaUndo.getSize(); }
-    public int redoCount() { return pilaRedo.getSize(); }
+    public int getSize() { return pilaUndo.getSize(); } // Cambiado a getSize() para consistencia
+    public int getRedoSize() { return pilaRedo.getSize(); }
 
-    public void limpiarHistorial() {
+    public void limpiar() {
         pilaUndo.limpiar();
         pilaRedo.limpiar();
     }
