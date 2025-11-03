@@ -5,11 +5,7 @@ import modelo.Nota;
 public class ListaNotas {
 
     private NodoNota cabeza;
-
-
-
     // ... (constructor, estaVacia, insertarInicio, eliminar, mostrar sin cambios) ...
-
     public int getTamanio() {
         // --- NUEVO: Para Reporte Top-K [cite: 49] ---
         // Cuenta el número de nodos en la lista.
@@ -75,5 +71,17 @@ public class ListaNotas {
             System.out.println("    " + aux.getDato());
             aux = aux.getSiguiente();
         }
+    }
+    public Nota buscarNotaPorId(int id) {
+        // --- NUEVO: Para Consultas de Lógica de Negocio ---
+        // Permite encontrar y retornar una Nota sin modificar la lista.
+        NodoNota actual = cabeza;
+        while (actual != null) {
+            if (actual.getDato().getId() == id) {
+                return actual.getDato(); // Devuelve la Nota
+            }
+            actual = actual.getSiguiente();
+        }
+        return null; // La nota con ese ID no fue encontrada
     }
 }
